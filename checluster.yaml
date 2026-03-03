@@ -1,0 +1,47 @@
+apiVersion: org.eclipse.che/v2
+kind: CheCluster
+metadata:
+  name: eclipse-che
+  namespace: eclipse-che
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  networking:
+    ingressClassName: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/auth-response-headers: "Authorization"
+      nginx.ingress.kubernetes.io/proxy-buffer-size: "64k"
+      nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
+      nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    auth:
+      oAuthClientName: k8s-client
+      oAuthSecret: eclipse-che
+      identityProviderURL: "https://keycloak.test.artemis.devnet.local/realms/che"
+      gateway:
+        oAuthProxy:
+          cookieExpireSeconds: 300
+        deployment:
+          containers:
+            - env:
+                - name: OAUTH2_PROXY_BACKEND_LOGOUT_URL
+                  value: "http://keycloak.test.artemis.devnet.local/realms/che/protocol/openid-connect/logout?id_token_hint={id_token}"
+              name: oauth-proxy
+  components:
+    cheServer:
+      extraProperties:
+        CHE_OIDC_USERNAME__CLAIM: email
+    devfileRegistry:
+      disableInternalRegistry: true
+      externalDevfileRegistries: []
+    pluginRegistry:
+      openVSXURL: ""
+  devEnvironments:
+    security:
+      containerSecurityContext:
+        allowPrivilegeEscalation: true
+        readOnlyRootFilesystem: false
+        runAsNonRoot: true
+      podSecurityContext:
+        fsGroup: 1001
+        runAsUser: 1001
+
