@@ -8,8 +8,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.jt4llc.com/lvops/artemis-gitops.git
-    path: manifests/eclipse-che
+    repoURL: https://github.com/KarahAllen/CheArgoCD.git
+    path: manifests
     targetRevision: main
   destination:
     server: https://kubernetes.default.svc
@@ -34,3 +34,4 @@ spec:
       kind: Deployment
       jsonPointers:
         - /spec/replicas
+
