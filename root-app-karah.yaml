@@ -6,9 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.jt4llc.com/lvops/artemis-gitops.git
+    repoURL: https://github.com/KarahAllen/CheArgoCD.git
     path: applications
-    targetRevision: che-argocd-new
+    targetRevision: main
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
@@ -16,3 +16,4 @@ spec:
     automated:
       prune: true
       selfHeal: true
+
